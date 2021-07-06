@@ -1,0 +1,14 @@
+{
+  "name": "workstation",
+  "version": "1.0.0",
+  "description": "Workstation for Senior Design Project",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Chisom Ikejiani",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^13.1.2"
+  }
+}

@@ -1,0 +1,58 @@
+ <!DOCTYPE html>
+<html>
+    <head>
+        <title>PTZ Camera Workstation</title>
+        <link rel="stylesheet" href="styles/style.css">
+        <script defer src="js/appFunctions.js"></script>
+        <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+        <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/fontawesome.min.css" integrity="sha384-wESLQ85D6gbsF459vf1CiZ2+rr+CsxRY0RpiF1tLlQpDnAgg6rwdsUF1+Ics2bni" crossorigin="anonymous"> -->
+    </head>
+    <!-- <i class="fa fa-video-camera" aria-hidden="true"></i> -->
+    <body>
+        <div class="mainApp">
+            <div class="topBar">
+                <div class="titleBar">
+                    <button id="showHideMenus" class="toggleButton"></button>
+                    <img src="icons/icon_top_bar.png" alt="">
+                    <div class="title">
+                        PTZ Camera Workstation
+                    </div>
+                </div>
+                <div class="titleBarBtns">
+                    <button id="minimizeBtn" class="topBtn minimizeBtn" title="Minimize"></button>
+                    <button id="maxResBtn" class="topBtn maximizeBtn" title="Maximize"></button>
+                    <button id="closeBtn" class="topBtn closeBtn" title="Close"></button>
+                </div>
+            </div>
+            <div class="contentArea">
+                <div id="mySidebar" class="leftMenu">
+                  <header id="operations"> Operations</header>
+                  <ul id="menuButtons">
+                    <li>
+                      <span class="icon"><i class='bx bx-play-circle'></i></span>
+                      <span class="ctrlBtn"><button id ="playBtn">Start/Stop</button></span>
+                    </li>
+                    <li>
+                      <span class="icon"><i class='bx bx-rocket'></i></span>
+                      <span class="ctrlBtn"><button id="speedBtn">Speed Controller</button></span>
+                    </li>
+                    <li>
+                      <span class="icon"><i class='bx bx-reset'></i></span>
+                      <span class="ctrlBtn"><button id="resetBtn">Reset</button>
+                  </li>
+                  </ul>
+                </div>
+                <div class="contentPages">
+                    <video autoplay controls>
+                      <source src="D:\Media\Anime\israel-adesanya-vs-paulo-costa-ufc-middleweight-championship.mp4" type="video/mp4">
+                        App doesn't support this type of video.
+                    </video>
+                </div>
+                <!-- <div class="contentPages">
+                    <img class="colorPalette" src="images/color-palette.png" width="500"/>
+                </div> -->
+
+            </div>
+        </div>
+    </body>
+</html>
