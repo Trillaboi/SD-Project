@@ -9,6 +9,7 @@
   "author": "Chisom Ikejiani",
   "license": "ISC",
   "dependencies": {
-    "electron": "^13.1.2"
+    "electron": "^13.1.2",
+    "python-shell": "^3.0.0"
   }
 }
