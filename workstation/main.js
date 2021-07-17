@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 const ipc = ipcMain
+const {spawn, fork} = require('child_process')
 
 function createWindow () {
     const win = new BrowserWindow({
@@ -47,7 +48,12 @@ function createWindow () {
 
     // Start or stop the stream
     ipc.on('playBtn', ()=>{
-        console.log('The play button was clicked')
+      // var process = spawn('python3', [path.join(__dirname, 'python_scripts/hello.py')])
+      const child = fork('python3', [path.join(__dirname, 'python_scripts/hello.py')])
+      // process.stdout.on('data', data =>{
+      //   console.log(data.toString())
+      // })
+      // console.log('The play button was clicked')
     })
 
     ipc.on('speedBtn', ()=> {
@@ -70,10 +76,15 @@ function createWindow () {
         console.log('Clicked on Close Btn')
         win.close()
     })
+
+
 }
 
 app.whenReady().then(() => {
   createWindow()
+  process.stdout.on('data', data => {
+    console.log(data.toString());
+  })
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
