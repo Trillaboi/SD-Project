@@ -6,12 +6,17 @@ var fs = require('fs');
 
 const gpc = spawn('python3', [path.join(__dirname, 'python_scripts/gpc.py')])
 
+gpc.stdout.on('data', (data) => {
+  console.log(`stdout: ${data}`)
+})
 
-// gpc.on('error', (err) =>{
-//     console.error('Failed to start subprocess')
-// })
+gpc.stderr.on('data', (data) =>{
+    console.error(`stderr: ${data}`)
+})
 
-
+gpc.on('close', (code) => {
+  console.log(`child process exited with code ${code}`)
+})
 
 function createWindow () {
     const win = new BrowserWindow({
@@ -65,8 +70,7 @@ function createWindow () {
 
     // Start or stop the stream
     ipc.on('playBtn', ()=>{
-      readMe = fs.writeFileSync('python_scripts/file_transfer.txt', 'utf8')
-      console.log(readMe)
+
 
     })
 
@@ -91,10 +95,10 @@ function createWindow () {
         win.close()
     })
 
-    child.on('message', function(message) {
-      console.log('Received message...');
-      console.log(message);
-      });
+    // child.on('message', function(message) {
+    //   console.log('Received message...');
+    //   console.log(message);
+    //   });
 
 
 }
