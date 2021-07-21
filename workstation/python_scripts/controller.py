@@ -6,7 +6,7 @@ def commands(output):
             print(key)
         elif value != False and value != 0:
             print(key, value)
-    
+
 if __name__ == '__main__':
     x = XInput('default.ini')
     while True:

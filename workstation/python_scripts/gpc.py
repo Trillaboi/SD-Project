@@ -11,10 +11,11 @@ import sys
 import socket
 import subprocess
 import signal
-import threading 
+import threading
 import time
+import os
 
-CONFIG_FILE = 'gpc.conf'
+CONFIG_FILE = 'python_scripts/gpc.conf'
 
 class GoPro:
     udp_port = 8554
@@ -38,7 +39,7 @@ class CommandEnum(enum.Enum):
     RECORD_START = 'record_start'
     RECORD_STOP = 'record_stop'
     STREAM = 'stream'
-    STREAM_BITRATE = 'stream_bitrate' 
+    STREAM_BITRATE = 'stream_bitrate'
     STREAM_RESOLUTION = 'stream_resolution'
     VIDEO_RESOLUTION = 'video_resolution'
     WAKE = 'wake'
@@ -83,7 +84,7 @@ class Message:
             raise ValueError(f'{self.command.value} takes {arity} argument(s); got {len(message_text[1:])}.')
         args = message_text[1 : arity + 1]
         if 'mapping' in definition:
-            mapping = definition['mapping'] 
+            mapping = definition['mapping']
             for i, arg in enumerate(args):
                 if arg not in mapping:
                     raise ValueError(f'{self.command.value}: unknown argument "{arg}".')
@@ -113,7 +114,7 @@ class Message:
         return 'want_result' in definition and definition['want_result']
 
     def __repr__(self) -> str:
-        return f'{self.command} {self.args}' 
+        return f'{self.command} {self.args}'
 
 def main() -> int:
     config = configparser.ConfigParser()
@@ -130,7 +131,7 @@ def main() -> int:
     send_wake_on_lan(gopro)
     keepalive_thread = threading.Thread(target=keepalive, args=(gopro,), daemon=True)
     keepalive_thread.start()
-    if Debug.enabled(): 
+    if Debug.enabled():
         gopro_info = Message(CommandEnum.GET_INFO).send_to(gopro).json(strict=False)['info']
         gopro_battery_level = Message(CommandEnum.GET_BATTERY_LEVEL).send_to(gopro)
         Debug.print(f"Model:\t\t\t{gopro_info['model_name']} (model {gopro_info['model_number']})")
@@ -141,7 +142,7 @@ def main() -> int:
         Debug.print(f"Battery level:\t\t{gopro_battery_level}")
 
     for line in sys.stdin:
-        command_text = line.strip()
+        command_text = line.strip().strip("\"")
         try:
             message = Message.from_text(command_text.split(' '))
         except ValueError as e:

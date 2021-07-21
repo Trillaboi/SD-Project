@@ -4,7 +4,13 @@ const ipc = ipcMain
 const {spawn, fork} = require('child_process');
 var fs = require('fs');
 
-const gpc = spawn('python3', [path.join(__dirname, 'python_scripts/gpc.py')])
+const gpc = spawn('python3', [path.join(__dirname, 'python_scripts/gpc.py')], {stdio:['ipc','pipe', 'pipe']})
+const controller = spawn('python3', [path.join(__dirname, 'python_scripts/.py')], {stdio:['ipc','pipe', 'pipe']})
+
+
+gpc.on('message', (data) => {
+  console.log(data)
+})
 
 gpc.stdout.on('data', (data) => {
   console.log(`stdout: ${data}`)
@@ -12,6 +18,7 @@ gpc.stdout.on('data', (data) => {
 
 gpc.stderr.on('data', (data) =>{
     console.error(`stderr: ${data}`)
+    // console.log(gpc.connected)
 })
 
 gpc.on('close', (code) => {
@@ -70,17 +77,17 @@ function createWindow () {
 
     // Start or stop the stream
     ipc.on('playBtn', ()=>{
-
+      gpc.send('display_on')
 
     })
 
     ipc.on('speedBtn', ()=> {
-      console.log('The speed button was clicked')
+      gpc.send('display_off')
     })
 
 
     ipc.on('resetBtn', ()=> {
-      console.log('The reset button was clicked')
+      gpc.send('get_info')
     })
 
 
