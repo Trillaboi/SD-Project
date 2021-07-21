@@ -1,1 +1,9 @@
-print("Hello you just executed a cross language script!")
+import sys
+
+input("enter: ")
+
+
+for line in sys.stdin:
+    if 'q' == line.rstrip():
+        break
+    print(f'Input : {line}')

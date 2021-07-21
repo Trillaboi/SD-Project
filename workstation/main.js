@@ -1,7 +1,17 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
-const path = require('path')
+const { app, BrowserWindow, ipcMain } = require('electron');
+const path = require('path');
 const ipc = ipcMain
-const {spawn, fork} = require('child_process')
+const {spawn, fork} = require('child_process');
+var fs = require('fs');
+
+const gpc = spawn('python3', [path.join(__dirname, 'python_scripts/gpc.py')])
+
+
+// gpc.on('error', (err) =>{
+//     console.error('Failed to start subprocess')
+// })
+
+
 
 function createWindow () {
     const win = new BrowserWindow({
@@ -17,6 +27,13 @@ function createWindow () {
         preload: path.join(__dirname, 'preload.js')
     }
 })
+
+    // var options = {
+    //   mode:'text',
+    //   encoding:'utf8',
+    //   pythonOptions: ['-u'],
+    //   scriptPath: path.join(__dirname, 'python_scripts'),
+    // }
 
     win.loadFile('src/index.html')
     win.setBackgroundColor('#343B48')
@@ -48,12 +65,9 @@ function createWindow () {
 
     // Start or stop the stream
     ipc.on('playBtn', ()=>{
-      // var process = spawn('python3', [path.join(__dirname, 'python_scripts/hello.py')])
-      const child = fork('python3', [path.join(__dirname, 'python_scripts/hello.py')])
-      // process.stdout.on('data', data =>{
-      //   console.log(data.toString())
-      // })
-      // console.log('The play button was clicked')
+      readMe = fs.writeFileSync('python_scripts/file_transfer.txt', 'utf8')
+      console.log(readMe)
+
     })
 
     ipc.on('speedBtn', ()=> {
@@ -76,6 +90,11 @@ function createWindow () {
         console.log('Clicked on Close Btn')
         win.close()
     })
+
+    child.on('message', function(message) {
+      console.log('Received message...');
+      console.log(message);
+      });
 
 
 }
