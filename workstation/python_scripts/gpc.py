@@ -142,6 +142,8 @@ def main() -> int:
         Debug.print(f"Battery level:\t\t{gopro_battery_level}")
 
     for line in sys.stdin:
+        Debug.print(line)
+        Debug.print(line.strip().strip('\"☺'))
         command_text = line.strip().strip("\"")
         try:
             message = Message.from_text(command_text.split(' '))
