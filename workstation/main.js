@@ -7,6 +7,7 @@ const EventEmitter = require('events');
 
 const gpc = spawn('python3', [path.join(__dirname, 'python_scripts/gpc.py')], {stdio:['ipc','pipe', 'pipe']})
 const controller = spawn('python3', [path.join(__dirname, 'python_scripts/controller.py')], {stdio:['ipc','pipe', 'pipe']})
+// const pi = spawn('ssh', [`pi@${pi_ipaddress}`, 'python3', '~/Documents/motor.py'], {stdio:['ipc','pipe', 'pipe']})
 
 class MyEmitter extends EventEmitter {}
 const buttonEmitter = new MyEmitter();
@@ -22,14 +23,14 @@ const commandDict = {
   'RIGHT_THUMB_-Y': 'zoom -',
   LEFT_TRIGGER: 0,
   RIGHT_TRIGGER: 0,
-  DPAD_UP: false,
+  DPAD_UP: 'stream',
   DPAD_DOWN: false,
   DPAD_LEFT: false,
   DPAD_RIGHT: false,
   START: 'record_start',
   BACK: 'record_stop',
-  LEFT_THUMB: 'wake',
-  RIGHT_THUMB: false,
+  LEFT_THUMB: 'display_on',
+  RIGHT_THUMB: 'display_off',
   LEFT_SHOULDER: false,
   RIGHT_SHOULDER: false,
   A: false,
@@ -47,19 +48,10 @@ var statusDict = {
   LEFT_Y_AXIS:0,
 }
 
-function setZoom(newZoom)
-{
-  if (statusDict.ZOOM > 100){
-    statusDict.ZOOM = 100
-  }else if (statusDict.ZOOM < 0){
-    statusDict.ZOOM = 0
-  }else {
-    statusDict.ZOOM += newZoom
-  }
+function adjustRange(analogInput){
+  // will move in increments of one since range is set from -1 to 1.
+  return Math.floor(32768/analogInput)
 }
-
-// console.log(commandDict)
-
 function eventSetup(){
   controller.on('message', (data) => {
     console.log(data)
@@ -91,12 +83,16 @@ function eventSetup(){
     if(controllerDict != {})
     {
       if(controllerDict["RIGHT_THUMB_Y"] != 0){
-          setZoom(newZoom)
-          gpc.send(statusDict.ZOOM)
+          statusDict.ZOOM += adjustRange(controllerDict["RIGHT_THUMB_Y"])
+          if(statusDict.ZOOM > 100)
+            statusDict.ZOOM = 100
+          gpc.send("zoom " + statusDict.ZOOM)
       }
-      if(controllerDict["RIGHT_THUMB_-Y"] != 0){
-          setZoom(newZoom)
-          gpc.send(statusDict.ZOOM)
+      else if(controllerDict["RIGHT_THUMB_-Y"] != 0){
+        statusDict.ZOOM += adjustRange(controllerDict["RIGHT_THUMB_-Y"])
+        if(statusDict.ZOOM < 0)
+          statusDict.ZOOM = 0
+          gpc.send("zoom " + statusDict.ZOOM)
       }
       if(controllerDict["A"] == true)
       {
@@ -119,17 +115,21 @@ function eventSetup(){
         console.log(commandDict.START)
         gpc.send(commandDict.START)
       }
-      if(controllerDict["STOP"] == true)
+      if(controllerDict["BACK"] == true)
       {
-        gpc.send(commandDict.STOP)
+        gpc.send(commandDict.BACK)
       }
       if(controllerDict["LEFT_THUMB"] == true)
       {
-        gpc.send(commandDict.LEFT_THUMB.toString())
+        gpc.send(commandDict.LEFT_THUMB)
       }
       if(controllerDict["RIGHT_THUMB"] == true)
       {
         console.log("RIGHT_THUMB")
+      }
+      if(controllerDict["DPAD_UP"] == true)
+      {
+        gpc.send(commandDict.DPAD_UP)
       }
     }
 
@@ -209,7 +209,7 @@ function createWindow () {
     // Start or stop the stream
     ipc.on('playBtn', ()=>{
       // gpc.send('display_on')
-      console.log(controllerDict)
+      gpc.send(commandDict.START)
     })
 
     ipc.on('speedBtn', ()=> {

@@ -1,0 +1,5 @@
+1) Connect to the GoPro's WiFi access point.
+2) Enable SSH on the pi.
+3) Setup ssh key pair between master and target machine.
+4) Find assigned ip address of the pi and add to the config file. 
+5) Put the python script in the documents folder.

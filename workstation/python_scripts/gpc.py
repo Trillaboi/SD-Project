@@ -45,6 +45,9 @@ class CommandEnum(enum.Enum):
     WAKE = 'wake'
     ZOOM = 'zoom'
 
+    @staticmethod
+    def list():
+        return list(map(lambda command: command.value, CommandEnum))
 class Command:
     definitions = {
             CommandEnum.DEFAULT_BOOT_MODE: {'arity': 1, 'template': '/setting/53/{}', 'mapping': {'video': '0', 'photo': '1', 'multishot': '2'}},
@@ -116,6 +119,7 @@ class Message:
     def __repr__(self) -> str:
         return f'{self.command} {self.args}'
 
+command_values = CommandEnum.list()
 def main() -> int:
     config = configparser.ConfigParser()
     try:
@@ -141,10 +145,21 @@ def main() -> int:
         Debug.print(f"AP MAC:\t\t\t{gopro_info['ap_mac']}")
         Debug.print(f"Battery level:\t\t{gopro_battery_level}")
 
+
+
     for line in sys.stdin:
-        Debug.print(line)
-        Debug.print(line.strip().strip('\"☺'))
-        command_text = line.strip().strip("\"")
+        # for some reason a very long mostly invisible random length string is added when using the subprocess.send() command on Windows
+        # This was the only way for me to remove it as strip couldn't do the job for some reason
+        if sys.platform == "win32":
+            for value in command_values:
+                if value in line:
+                    command_text = value + line.strip().split(value)[1].strip("\"")
+                    break
+            # command_text = line[16:].strip().strip("\"")
+            Debug.print(command_text)
+        else:
+            command_text = line.strip().strip("\"")
+            Debug.print(line)
         try:
             message = Message.from_text(command_text.split(' '))
         except ValueError as e:
