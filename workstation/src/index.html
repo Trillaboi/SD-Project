@@ -2,6 +2,9 @@
 <html>
     <head>
         <title>PTZ Camera Workstation</title>
+        <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
+        <script src="https://unpkg.com/video.js/dist/video.js"></script>
+        <script src="https://unpkg.com/@videojs/http-streaming/dist/videojs-http-streaming.js"></script>
         <link rel="stylesheet" href="styles/style.css">
         <script defer src="js/appFunctions.js"></script>
         <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
@@ -43,10 +46,15 @@
                   </ul>
                 </div>
                 <div class="contentPages">
-                    <video autoplay controls>
-                      <source src="D:\Media\Anime\israel-adesanya-vs-paulo-costa-ufc-middleweight-championship.mp4" type="video/mp4">
-                        App doesn't support this type of video.
-                    </video>
+                            <div class="column">
+                       <h3>MUX 1</h3>
+                       <video-js id="stmux1" class="vjs-default-skin" controls preload="auto" width="280" autoplay>
+                           <source src="videos/stream.m3u8" type="application/x-mpegURL">
+                       </video-js>
+                   </div>
+                   <script>
+                       var stmux1 = videojs('stmux1');
+                   </script>
                 </div>
                 <!-- <div class="contentPages">
                     <img class="colorPalette" src="images/color-palette.png" width="500"/>

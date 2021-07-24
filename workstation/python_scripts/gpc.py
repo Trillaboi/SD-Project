@@ -150,16 +150,22 @@ def main() -> int:
     for line in sys.stdin:
         # for some reason a very long mostly invisible random length string is added when using the subprocess.send() command on Windows
         # This was the only way for me to remove it as strip couldn't do the job for some reason
-        if sys.platform == "win32":
-            for value in command_values:
-                if value in line:
-                    command_text = value + line.strip().split(value)[1].strip("\"")
-                    break
-            # command_text = line[16:].strip().strip("\"")
+        # if sys.platform == "win32":
+        #     command_text = line.strip().strip("☺") # for some reason the left thumbstick button alone will only work if this is here
+        #     for value in command_values:
+        #         if value in line:
+        #             command_text = value + line.strip().split(value)[1].strip("\"")
+        #             Debug.print(command_text)
+        #             break
+        #
+        #
+        #     # command_text = line[16:].strip().strip("\"")
+        # else:
+        if "||" in line:
+            command_text = line.split("||")[1]
             Debug.print(command_text)
         else:
-            command_text = line.strip().strip("\"")
-            Debug.print(line)
+            continue
         try:
             message = Message.from_text(command_text.split(' '))
         except ValueError as e:
@@ -169,8 +175,9 @@ def main() -> int:
         if reply:
             print(reply)
 
-        if message.command == CommandEnum.STREAM:
-            subprocess.run([f'{config["gpc"]["mpv-path"]}', '--profile=low-latency', f'udp://{gopro.ip_address}:{gopro.udp_port}'])
+        # if message.command == CommandEnum.STREAM:
+            # subprocess.run([f'{config["gpc"]["mpv-path"]}', '--profile=low-latency', f'udp://{gopro.ip_address}:{gopro.udp_port}'])
+
 
     sys.exit(0)
 
