@@ -66,9 +66,14 @@ function createWindow () {
       core.startStream()
     })
 
-    ipc.on('speedBtn', ()=> {
-      // gpc.send('display_off')
+    ipc.on('zoomINBtn', ()=> {
+      core.zoomButton(5)
     })
+
+    ipc.on('zoomOUTBtn', ()=> {
+      core.zoomButton(-5)
+    })
+
 
 
     ipc.on('resetBtn', ()=> {

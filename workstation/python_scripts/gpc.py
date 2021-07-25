@@ -144,6 +144,7 @@ def main() -> int:
         Debug.print(f"AP SSID:\t\t{gopro_info['ap_ssid']}")
         Debug.print(f"AP MAC:\t\t\t{gopro_info['ap_mac']}")
         Debug.print(f"Battery level:\t\t{gopro_battery_level}")
+        # Debug.print({"Model":Model:{gopro_info['model_name']} (model {gopro_info['model_number']})"})
 
 
 

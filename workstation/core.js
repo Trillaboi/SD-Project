@@ -80,6 +80,18 @@ function startStream()
   })
 }
 
+function zoomButton(zoom){
+  statusDict.ZOOM+=zoom
+  if(statusDict.ZOOM > 100)
+  {
+    statusDict.ZOOM = 100
+  }
+  else if(statusDict.ZOOM < 0){
+    statusDict.ZOOM = 0
+  }
+  gpc.send(delimitInput("zoom " + statusDict.ZOOM))
+}
+
 function adjustRange(analogInput){
   // will move in increments of one since range is set from -1 to 1.
   return Math.floor(32768/analogInput)
@@ -253,5 +265,5 @@ function eventSetup(){
 
 }
 
-module.exports = { eventSetup, startStream };
+module.exports = { eventSetup, startStream, zoomButton};
 //eventSetup()

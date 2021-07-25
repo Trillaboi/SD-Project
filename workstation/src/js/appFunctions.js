@@ -5,7 +5,8 @@ const mySidebar = document.getElementById('mySidebar')
 
 // const videoElement = document.querySelector('video')
 const startBtn = document.getElementById('startBtn')
-const speedBtn = document.getElementById('speedBtn')
+const zoomINBtn = document.getElementById('zoomINBtn')
+const zoomOUTBtn = document.getElementById('zoomOUTBtn')
 const resetBtn = document.getElementById('resetBtn')
 // const videoSelectBtn = document.getElementById('videoSelectBtn')
 // videoSelectBtn.onclick = getVideoSources
@@ -59,8 +60,12 @@ playBtn.addEventListener('click', ()=>{
     ipc.send('playBtn')
 })
 
-speedBtn.addEventListener('click', ()=>{
-    ipc.send('speedBtn')
+zoomINBtn.addEventListener('click', ()=>{
+    ipc.send('zoomINBtn')
+})
+
+zoomOUTBtn.addEventListener('click', ()=>{
+    ipc.send('zoomOUTBtn')
 })
 
 resetBtn.addEventListener('click', ()=>{
