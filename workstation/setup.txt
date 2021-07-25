@@ -10,10 +10,13 @@ Master Computer Setup
 1) Download ffmpeg and add the path to your environment variables. (Guide: www.iwingeek.com/install-use-ffmpeg-on-windows-10)
 
 
-Motor
-1) pip install pi_servo_hat
+Motor on rapsberry pi
+1) sudo pip install sparkfun-pi-servo-hat
 
 
 Keypair Setup
 1) run ssh-keygen -t rsa -b 2048
-2) run ssh-copy-id id@server (Mac/Linux) |
+2) run ssh-copy-id id@server (Mac/Linux) | type $env:USERPROFILE\.ssh\id_rsa.pub | ssh hostname@address "cat >> .ssh/authorized_keys"(Windows)
+
+FFPLAY
+Install ffmpeg with ffmplay for video player

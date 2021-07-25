@@ -1,10 +1,10 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const ipc = ipcMain
-const listeners = require("./core")
+const core = require("./core")
 
 
-listeners.eventSetup()
+core.eventSetup()
 
 function delimitInput(input){
   return "||"+input.toString()+"||"
@@ -63,7 +63,7 @@ function createWindow () {
     // Start or stop the stream
     ipc.on('playBtn', ()=>{
       // gpc.send('display_on')
-      gpc.send(delimitInput(commandDict.START))
+      core.startStream()
     })
 
     ipc.on('speedBtn', ()=> {

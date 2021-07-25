@@ -55,6 +55,31 @@ function delimitInput(input){
   return "||"+input.toString()+"||"
 }
 
+function startStream()
+{
+  gpc.send(delimitInput(commandDict.DPAD_UP))
+  // var waitTill = new Date(new Date().getTime() + seconds * 1000);
+  // while(waitTill > new Date()){}
+  var ffplay = spawn('ffplay', ['-loglevel', 'panic', '-fflags', 'nobuffer', '-f:v', 'mpegts', '-probesize', '8192', '-window_title', 'PTZ Camera', 'udp://10.5.5.100:8554'])
+  // ffplay.on('message', (data) => {
+  //   console.log(data)
+  //   console.log("here")
+  // })
+
+  ffplay.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`)
+  })
+
+  ffplay.stderr.on('data', (data) =>{
+      console.error(`stderr: ${data}`)
+      // console.log(gpc.connected)
+  })
+
+  ffplay.on('close', (code) => {
+    console.log(`gpc exited with code ${code}`)
+  })
+}
+
 function adjustRange(analogInput){
   // will move in increments of one since range is set from -1 to 1.
   return Math.floor(32768/analogInput)
@@ -62,8 +87,9 @@ function adjustRange(analogInput){
 
 function PTRange(analogInput){
   // will move in increments of one since range is set from -1 to 1.
-  return Math.floor(32768/analogInput)
+  return Math.ceil(1/(3276.8/analogInput))
 }
+
 
 function eventSetup(){
   controller.on('message', (data) => {
@@ -146,30 +172,42 @@ function eventSetup(){
       if(controllerDict["LEFT_THUMB_Y"] != 0){
 
           statusDict.LEFT_Y_AXIS +=  PTRange(controllerDict["LEFT_THUMB_Y"])
-          if(statusDict.LEFT_Y_AXIS > 235)
-            statusDict.LEFT_Y_AXIS = 235
-          var outputx = delimitInput("move_one "+statusDict.LEFT_Y_AXIS)
-          pi.send(outputx)
+           if(statusDict.LEFT_Y_AXIS > 146)
+            statusDict.LEFT_Y_AXIS = 146
+            setTimeout(function (loc){
+                  pi.send(delimitInput('move_one '+loc))
+                  console.log("thumb up: "+loc)
+            }, 10, statusDict.LEFT_Y_AXIS)
       }else if(controllerDict["LEFT_THUMB_-Y"] != 0){
         statusDict.LEFT_Y_AXIS +=  PTRange(controllerDict["LEFT_THUMB_-Y"])
         if(statusDict.LEFT_Y_AXIS < -55)
           statusDict.LEFT_Y_AXIS = -55
-        var outputy = delimitInput('move_one '+statusDict.LEFT_Y_AXIS)
-        pi.send(outputy)
+          setTimeout(function (loc){
+                pi.send(delimitInput('move_one '+loc))
+                console.log("thumb down: "+loc)
+          }, 10, statusDict.LEFT_Y_AXIS)
       }
 
-      if(controllerDict["LEFT_THUMB_X"] != 0){
+      if(controllerDict["LEFT_THUMB_X"] != 0 ){
           statusDict.LEFT_X_AXIS +=  PTRange(controllerDict["LEFT_THUMB_X"])
-          if(statusDict.LEFT_X_AXIS > 145)
-            statusDict.LEFT_X_AXIS = 145
-          pi.send(delimitInput('move_two '+statusDict.LEFT_X_AXIS))
+          if(statusDict.LEFT_X_AXIS > 275)
+            statusDict.LEFT_X_AXIS = 275
+
+          setTimeout(function (loc){
+                pi.send(delimitInput('move_two '+loc))
+                console.log("thumb right: "+loc)
+          }, 10, statusDict.LEFT_X_AXIS)
+
 
       }else if(controllerDict["LEFT_THUMB_-X"] != 0){
         statusDict.LEFT_X_AXIS +=  PTRange(controllerDict["LEFT_THUMB_-X"])
         if(statusDict.LEFT_X_AXIS < -55)
           statusDict.LEFT_X_AXIS = -55
 
-        pi.send(delimitInput("move_two "+statusDict.LEFT_X_AXIS))
+          setTimeout(function (loc){
+                pi.send(delimitInput('move_two '+loc))
+                console.log("thumb left: "+loc)
+          }, 10, statusDict.LEFT_X_AXIS)
       }
       if(controllerDict["A"] == true)
       {
@@ -190,56 +228,30 @@ function eventSetup(){
       if(controllerDict["START"] == true)
       {
         console.log(commandDict.START)
-        gpc.send(commandDict.START)
+        gpc.send(delimitInput(commandDict.START))
       }
       if(controllerDict["BACK"] == true)
       {
-        gpc.send(commandDict.BACK)
+        gpc.send(delimitInput(commandDict.BACK))
       }
       if(controllerDict["LEFT_THUMB"] == true)
       {
-        gpc.send(commandDict.LEFT_THUMB)
+        gpc.send(delimitInput(commandDict.LEFT_THUMB))
       }
       if(controllerDict["RIGHT_THUMB"] == true)
       {
-        gpc.send(commandDict.RIGHT_THUMB)
+        gpc.send(delimitInput(commandDict.RIGHT_THUMB))
       }
       if(controllerDict["DPAD_UP"] == true)
       {
-        gpc.send(commandDict.DPAD_UP)
-        var command = ffmpeg('udp://@10.5.5.100:8554')
-        // set video bitrate
-          .videoBitrate(1024)
-          // set h264 preset
-          .addOption('-preset','superfast')
-          // set target codec
-          .videoCodec('libx264')
-          // set audio bitrate
-          .audioBitrate('128k')
-          // set audio codec
-          .audioCodec('aac')
-          // set number of audio channels
-          .audioChannels(2)
-          // set hls segments time
-          .addOption('-hls_time', 10)
-          // include all the segments in the list
-          .addOption('-hls_list_size',0)
-          // setup event handlers
-          .on('end', function() {
-            console.log('file has been converted succesfully');
-          })
-          .on('error', function(err) {
-            console.log('an error happened: ' + err.message);
-          })
-          // save to file
-          .save(path.join(__dirname, 'src/videos/stream.m3u8'));
+        startStream()
 
-        }
+      }
     }
     // console.log('button input has been detected')
   })
 
 }
 
-module.exports = { eventSetup };
+module.exports = { eventSetup, startStream };
 //eventSetup()

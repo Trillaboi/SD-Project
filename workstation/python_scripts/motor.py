@@ -30,15 +30,18 @@ class Motor:
         self.servo = pi_servo_hat.PiServoHat()
         self.servo.restart()
 
-    def move_servo(self):
-        self.servo.move_servo_position(0, 0, 180)
-        self.servo.move_servo_position(1, 0, 180)
+    def change_frequency(self, x):
+        self.servo.set_pwm_frequency(x)
 
     def move_servo_one(self, position):
         self.servo.move_servo_position(0, position, 180)
 
     def move_servo_two(self, position):
-        self.servo.move_servo_position(0, position, 180)
+        self.servo.move_servo_position(1, position, 180)
+
+    def set_servos_start(self):
+        self.move_servo_one(75)
+        self.move_servo_two(0)
 
     def main(self):
         for line in sys.stdin:
@@ -63,8 +66,10 @@ def signal_quit(signal, frame):
     sys.exit(0)
 
 if __name__ in "__main__":
-    print("starting motor.py", file=sys.stderr)
+    print("starting motor.py")
     signal.signal(signal.SIGINT, signal_quit)
     x = Motor()
-    x.move_servo()
+    x.change_frequency(36)
+    x.set_servos_start()
+    x.servo.get_pwm_frequency()
     x.main()
