@@ -11,11 +11,10 @@ import sys
 import socket
 import subprocess
 import signal
-import threading
+import threading 
 import time
-import os
 
-CONFIG_FILE = 'python_scripts/gpc.conf'
+CONFIG_FILE = 'gpc.conf'
 
 class GoPro:
     udp_port = 8554
@@ -39,15 +38,12 @@ class CommandEnum(enum.Enum):
     RECORD_START = 'record_start'
     RECORD_STOP = 'record_stop'
     STREAM = 'stream'
-    STREAM_BITRATE = 'stream_bitrate'
+    STREAM_BITRATE = 'stream_bitrate' 
     STREAM_RESOLUTION = 'stream_resolution'
     VIDEO_RESOLUTION = 'video_resolution'
     WAKE = 'wake'
     ZOOM = 'zoom'
 
-    @staticmethod
-    def list():
-        return list(map(lambda command: command.value, CommandEnum))
 class Command:
     definitions = {
             CommandEnum.DEFAULT_BOOT_MODE: {'arity': 1, 'template': '/setting/53/{}', 'mapping': {'video': '0', 'photo': '1', 'multishot': '2'}},
@@ -87,7 +83,7 @@ class Message:
             raise ValueError(f'{self.command.value} takes {arity} argument(s); got {len(message_text[1:])}.')
         args = message_text[1 : arity + 1]
         if 'mapping' in definition:
-            mapping = definition['mapping']
+            mapping = definition['mapping'] 
             for i, arg in enumerate(args):
                 if arg not in mapping:
                     raise ValueError(f'{self.command.value}: unknown argument "{arg}".')
@@ -117,9 +113,8 @@ class Message:
         return 'want_result' in definition and definition['want_result']
 
     def __repr__(self) -> str:
-        return f'{self.command} {self.args}'
+        return f'{self.command} {self.args}' 
 
-command_values = CommandEnum.list()
 def main() -> int:
     config = configparser.ConfigParser()
     try:
@@ -135,7 +130,7 @@ def main() -> int:
     send_wake_on_lan(gopro)
     keepalive_thread = threading.Thread(target=keepalive, args=(gopro,), daemon=True)
     keepalive_thread.start()
-    if Debug.enabled():
+    if Debug.enabled(): 
         gopro_info = Message(CommandEnum.GET_INFO).send_to(gopro).json(strict=False)['info']
         gopro_battery_level = Message(CommandEnum.GET_BATTERY_LEVEL).send_to(gopro)
         Debug.print(f"Model:\t\t\t{gopro_info['model_name']} (model {gopro_info['model_number']})")
@@ -145,27 +140,8 @@ def main() -> int:
         Debug.print(f"AP MAC:\t\t\t{gopro_info['ap_mac']}")
         Debug.print(f"Battery level:\t\t{gopro_battery_level}")
 
-
-
     for line in sys.stdin:
-        # for some reason a very long mostly invisible random length string is added when using the subprocess.send() command on Windows
-        # This was the only way for me to remove it as strip couldn't do the job for some reason
-        # if sys.platform == "win32":
-        #     command_text = line.strip().strip("☺") # for some reason the left thumbstick button alone will only work if this is here
-        #     for value in command_values:
-        #         if value in line:
-        #             command_text = value + line.strip().split(value)[1].strip("\"")
-        #             Debug.print(command_text)
-        #             break
-        #
-        #
-        #     # command_text = line[16:].strip().strip("\"")
-        # else:
-        if "||" in line:
-            command_text = line.split("||")[1]
-            Debug.print(command_text)
-        else:
-            continue
+        command_text = line.strip()
         try:
             message = Message.from_text(command_text.split(' '))
         except ValueError as e:
@@ -175,9 +151,8 @@ def main() -> int:
         if reply:
             print(reply)
 
-        # if message.command == CommandEnum.STREAM:
-            # subprocess.run([f'{config["gpc"]["mpv-path"]}', '--profile=low-latency', f'udp://{gopro.ip_address}:{gopro.udp_port}'])
-
+        if message.command == CommandEnum.STREAM:
+            subprocess.run([f'{config["gpc"]["mpv-path"]}', '--profile=low-latency', f'udp://{gopro.ip_address}:{gopro.udp_port}'])
 
     sys.exit(0)
 

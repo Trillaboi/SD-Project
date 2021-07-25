@@ -43,10 +43,15 @@
                   </ul>
                 </div>
                 <div class="contentPages">
-                    <video autoplay controls>
-                      <source src="D:\Media\Anime\israel-adesanya-vs-paulo-costa-ufc-middleweight-championship.mp4" type="video/mp4">
-                        App doesn't support this type of video.
-                    </video>
+                            <div class="column">
+                       <h3></h3>
+                       <video-js id="stmux1" class="vjs-default-skin" controls preload="auto" width="280" autoplay>
+                           <source src="videos/stream.m3u8" type="application/x-mpegURL">
+                       </video-js>
+                   </div>
+                   <script>
+                       var stmux1 = videojs('stmux1');
+                   </script>
                 </div>
                 <!-- <div class="contentPages">
                     <img class="colorPalette" src="images/color-palette.png" width="500"/>

@@ -1,17 +1,14 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const ipc = ipcMain
-const {spawn, fork} = require('child_process');
-var fs = require('fs');
-
-const gpc = spawn('python3', [path.join(__dirname, 'python_scripts/gpc.py')])
+const core = require("./core")
 
 
-// gpc.on('error', (err) =>{
-//     console.error('Failed to start subprocess')
-// })
+core.eventSetup()
 
-
+function delimitInput(input){
+  return "||"+input.toString()+"||"
+}
 
 function createWindow () {
     const win = new BrowserWindow({
@@ -65,18 +62,17 @@ function createWindow () {
 
     // Start or stop the stream
     ipc.on('playBtn', ()=>{
-      readMe = fs.writeFileSync('python_scripts/file_transfer.txt', 'utf8')
-      console.log(readMe)
-
+      // gpc.send('display_on')
+      core.startStream()
     })
 
     ipc.on('speedBtn', ()=> {
-      console.log('The speed button was clicked')
+      // gpc.send('display_off')
     })
 
 
     ipc.on('resetBtn', ()=> {
-      console.log('The reset button was clicked')
+      // gpc.send('get_info')
     })
 
 
@@ -91,10 +87,10 @@ function createWindow () {
         win.close()
     })
 
-    child.on('message', function(message) {
-      console.log('Received message...');
-      console.log(message);
-      });
+    // child.on('message', function(message) {
+    //   console.log('Received message...');
+    //   console.log(message);
+    //   });
 
 
 }

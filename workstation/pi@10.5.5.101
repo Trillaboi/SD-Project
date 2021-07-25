@@ -1,0 +1,36 @@
+import pi_servo_hat, sys, time
+
+@enum.unique
+class CommandEnum(enum.Enum):
+    MOVE_SERVO_ONE: 'move_one'
+    MOVE_SERVO_TWO: 'move_two'
+
+    @staticmethod
+    def list():
+        return list(map(lambda command: command.value, CommandEnum))
+
+# class Command:
+#     defenitions = {
+#         CommandEnum.MOVE_SERVO_ONE: {'template': ''}
+#         CommandEnum.MOVE_SERVO_ONE: {'template': ''}
+#     }
+class Motor:
+    def __init__(self):
+        self.servo = pi_servo_hat.PiServoHat()
+
+    command_values = CommandEnum.list()
+    def main(self):
+        for line in sys.stdin:
+            for value in command_values:
+                if value in line:
+                    command = value + line.strip().split(value)[1].strip("\"")
+                    break
+
+        print("python: "+command)
+    def signal_quit(self):
+        sys.exit(0)
+
+if __name__ in "__main__":
+    signal.signal(signal.SIGINT, signal_quit())
+    x = Motor()
+    x.main()
