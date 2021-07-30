@@ -80,6 +80,10 @@ function createWindow () {
       // gpc.send('get_info')
     })
 
+    ipc.on('saveBtn', () =>{
+      core.saveLocation()
+    })
+
 
     // //// CLOSE APP
     // ipc.on('stopStream', ()=>{

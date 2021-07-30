@@ -38,17 +38,58 @@ const commandDict = {
   RIGHT_THUMB: 'display_off',
   LEFT_SHOULDER: false,
   RIGHT_SHOULDER: false,
-  A: false,
-  B: false,
-  X: false,
-  Y: false
+  A: saveLocation,
+  B: sendLocation,
+  X: sendLocation,
+  Y: sendLocation
 }
 
 var controllerDict = {}
 var statusDict = {
   ZOOM:0,
   LEFT_X_AXIS:0,
-  LEFT_Y_AXIS:0,
+  LEFT_Y_AXIS:75,
+}
+var locDict = {
+  locations:[]
+}
+
+function saveLocation(){
+  locDict["locations"].push({"X":statusDict.LEFT_X_AXIS,"Y":statusDict.LEFT_Y_AXIS})
+  console.log(locDict)
+}
+
+function sendLocation(button){
+  if (button == "B" && (locDict["locations"].length>2)){
+  setTimeout(function (loc){
+        pi.send(delimitInput('move_one '+loc))
+        console.log("thumb down: "+loc)
+  }, 10, locDict["locations"][2]["X"])
+
+  setTimeout(function (loc){
+        pi.send(delimitInput('move_two '+loc))
+        console.log("thumb down: "+loc)
+  }, 10, locDict["locations"][2]["Y"])
+  }
+  else if(button=="Y" && (locDict["locations"].length>1))
+  {
+    setTimeout(function (loc){
+          pi.send(delimitInput('move_one '+loc))
+    }, 10, locDict["locations"][1]["X"])
+
+    setTimeout(function (loc){
+          pi.send(delimitInput('move_two '+loc))
+    }, 10, locDict["locations"][1]["Y"])
+  } else
+  {
+    setTimeout(function (loc){
+          pi.send(delimitInput('move_one '+loc))
+    }, 10, locDict["locations"][0]["X"])
+
+    setTimeout(function (loc){
+          pi.send(delimitInput('move_two '+loc))
+    }, 10, locDict["locations"][0]["Y"])
+  }
 }
 
 function delimitInput(input){
@@ -99,7 +140,7 @@ function adjustRange(analogInput){
 
 function PTRange(analogInput){
   // will move in increments of one since range is set from -1 to 1.
-  return Math.ceil(1/(3276.8/analogInput))
+  return Math.ceil(1/(6553.6/analogInput))
 }
 
 
@@ -223,19 +264,19 @@ function eventSetup(){
       }
       if(controllerDict["A"] == true)
       {
-        pi.send("Hello A")
+        commandDict.A()
       }
       if(controllerDict["B"] == true)
       {
-        console.log("B")
+        commandDict.B("B")
       }
       if(controllerDict["X"] == true)
       {
-        console.log("X")
+        commandDict.X("X")
       }
       if(controllerDict["Y"] == true)
       {
-        console.log("Y")
+        commandDict.Y("Y")
       }
       if(controllerDict["START"] == true)
       {
@@ -265,5 +306,5 @@ function eventSetup(){
 
 }
 
-module.exports = { eventSetup, startStream, zoomButton};
+module.exports = { eventSetup, startStream, zoomButton, saveLocation};
 //eventSetup()

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<playlist xmlns="http://xspf.org/ns/0/" xmlns:vlc="http://www.videolan.org/vlc/playlist/ns/0/" version="1">
+	<title>Playlist</title>
+	<trackList>
+		<track>
+			<location>file:///C:/Users/C$/Videos/2021-07-26%2008-36-59.mkv</location>
+			<duration>53800</duration>
+			<extension application="http://www.videolan.org/vlc/playlist/0">
+				<vlc:id>0</vlc:id>
+			</extension>
+		</track>
+		<track>
+			<location>file:///D:/Downloads/Demo%20videos/MichaelFinalDemoPlusTestVideos/Using/VID_20210725_181811.mp4</location>
+			<duration>7205</duration>
+			<extension application="http://www.videolan.org/vlc/playlist/0">
+				<vlc:id>1</vlc:id>
+			</extension>
+		</track>
+		<track>
+			<location>file:///D:/Downloads/Demo%20videos/MichaelFinalDemoPlusTestVideos/Using/zoom%20use.mp4</location>
+			<duration>14122</duration>
+			<extension application="http://www.videolan.org/vlc/playlist/0">
+				<vlc:id>2</vlc:id>
+			</extension>
+		</track>
+		<track>
+			<location>file:///D:/Downloads/Demo%20videos/MichaelFinalDemoPlusTestVideos/Using/zoom.mp4</location>
+			<duration>21269</duration>
+			<extension application="http://www.videolan.org/vlc/playlist/0">
+				<vlc:id>3</vlc:id>
+			</extension>
+		</track>
+		<track>
+			<location>file:///D:/Downloads/Demo%20videos/MichaelFinalDemoPlusTestVideos/Using/Wind%20test%20validity.mp4</location>
+			<duration>12118</duration>
+			<extension application="http://www.videolan.org/vlc/playlist/0">
+				<vlc:id>4</vlc:id>
+			</extension>
+		</track>
+		<track>
+			<location>file:///D:/Downloads/Demo%20videos/MichaelFinalDemoPlusTestVideos/Using/Wind%20blowing.mp4</location>
+			<duration>21400</duration>
+			<extension application="http://www.videolan.org/vlc/playlist/0">
+				<vlc:id>5</vlc:id>
+			</extension>
+		</track>
+		<track>
+			<location>file:///D:/Downloads/Demo%20videos/MichaelFinalDemoPlusTestVideos/Using/30%20Second%20water%20test.mp4</location>
+			<duration>40677</duration>
+			<extension application="http://www.videolan.org/vlc/playlist/0">
+				<vlc:id>6</vlc:id>
+			</extension>
+		</track>
+		<track>
+			<location>file:///D:/Downloads/Demo%20videos/MichaelFinalDemoPlusTestVideos/Using/after%20water.mp4</location>
+			<duration>15540</duration>
+			<extension application="http://www.videolan.org/vlc/playlist/0">
+				<vlc:id>7</vlc:id>
+			</extension>
+		</track>
+		<track>
+			<location>file:///D:/Downloads/Demo%20videos/MichaelFinalDemoPlusTestVideos/Using/after%20water%20zoom%20and%20still%20working.mp4</location>
+			<duration>18646</duration>
+			<extension application="http://www.videolan.org/vlc/playlist/0">
+				<vlc:id>8</vlc:id>
+			</extension>
+		</track>
+	</trackList>
+	<extension application="http://www.videolan.org/vlc/playlist/0">
+		<vlc:item tid="0"/>
+		<vlc:item tid="1"/>
+		<vlc:item tid="2"/>
+		<vlc:item tid="3"/>
+		<vlc:item tid="4"/>
+		<vlc:item tid="5"/>
+		<vlc:item tid="6"/>
+		<vlc:item tid="7"/>
+		<vlc:item tid="8"/>
+	</extension>
+</playlist>

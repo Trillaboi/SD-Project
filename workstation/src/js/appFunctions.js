@@ -8,6 +8,7 @@ const startBtn = document.getElementById('startBtn')
 const zoomINBtn = document.getElementById('zoomINBtn')
 const zoomOUTBtn = document.getElementById('zoomOUTBtn')
 const resetBtn = document.getElementById('resetBtn')
+const saveBtn = document.getElementById('saveBtn')
 // const videoSelectBtn = document.getElementById('videoSelectBtn')
 // videoSelectBtn.onclick = getVideoSources
 
@@ -72,6 +73,9 @@ resetBtn.addEventListener('click', ()=>{
     ipc.send('resetBtn')
 })
 
+saveBtn.addEventListener('click', ()=>{
+    ipc.send('saveBtn')
+})
 
 //// CLOSE APP
 closeBtn.addEventListener('click', ()=>{
